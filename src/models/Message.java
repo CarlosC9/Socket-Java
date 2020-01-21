@@ -5,6 +5,7 @@
  */
 package models;
 
+
 /**
  *
  * @author Carlos
@@ -14,7 +15,7 @@ public class Message {
     private String message;
     private String id;
 
-    public Message(String message, String id) {
+    public Message(String id, String message) {
         this.message = message;
         this.id = id;
     }
