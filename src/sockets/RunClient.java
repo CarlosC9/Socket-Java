@@ -1,13 +1,13 @@
 
 package sockets;
 
-import controllers.chatController;
+import client.controllers.chatController;
 
 /**
  *
  * @author Carlos
  */
-public class Sockets {
+public class RunClient {
 
     
     public static void main(String[] args) {
