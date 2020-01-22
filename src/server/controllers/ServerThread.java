@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import models.Message;
 
 public class ServerThread extends Thread {
-    
+
     private Socket socket;
     private ArrayList<Socket> sockets;
 
@@ -22,27 +22,42 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        
-        while (this.socket.isConnected()) {
+        boolean endOfConnection = false;
+
+        while (!socket.isClosed() && !endOfConnection) {
             try {
-                
+
                 ObjectInputStream obs = new ObjectInputStream(this.socket.getInputStream());
                 Message message = (Message) obs.readObject();
-                System.out.println("The user " + message.getId() + " said " + message.getMessage());
-
-                for (Socket s : this.sockets) {
-                    ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-                    oos.writeObject(message);
-                    oos.flush();
+                
+                if (message.isEndConnection()) {
+                    endOfConnection = true;
+                } else {
+                    this.sendMessageAllUsers(message);
                 }
+
             } catch (IOException ex) {
                 Logger.getLogger(chatController.class.getName()).log(Level.SEVERE, null, ex);
+                endOfConnection = true;
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(chatController.class.getName()).log(Level.SEVERE, null, ex);
+                endOfConnection = true;
             }
 
         }
-        
+
+        this.sockets.remove(this.socket);
+
     }
-   
+
+    private void sendMessageAllUsers(Message message) throws IOException {
+        System.out.println("The user " + message.getId() + " said " + message.getMessage());
+
+        for (Socket s : this.sockets) {
+            ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+            oos.writeObject(message);
+            oos.flush();
+        }
+    }
+
 }

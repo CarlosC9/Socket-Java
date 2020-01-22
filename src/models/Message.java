@@ -15,6 +15,10 @@ public class Message implements Serializable {
     
     private String message;
     private String id;
+    private boolean endConnection = false;
+
+    public Message() {
+    }
 
     public Message(String id, String message) {
         this.message = message;
@@ -28,7 +32,13 @@ public class Message implements Serializable {
     public String getId() {
         return id;
     }
+
+    public boolean isEndConnection() {
+        return endConnection;
+    }
     
-    
+    public void thisMessageEndConnection() {
+        this.endConnection = true;
+    }
     
 }
